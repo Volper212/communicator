@@ -1,4 +1,14 @@
 <?php
+$ip = "0.0.0.0";
+// $context = stream_context_create([
+//     "ssl" => [
+//         "ciphers" => "DHE-RSA-AES256-SHA:LONG-CIPHER",
+//         "allow_self_signed" => true,
+//         "verify_peer" => false,
+//         "verify_peer_name" => false
+//     ]
+// ]);
+
 function between(int $number, int $min, int $max) {
     return $number >= $min && $number <= $max;
 }
@@ -34,7 +44,7 @@ function unmask(string $text) {
 	return $text;
 }
 
-$server = stream_socket_server("tcp://127.0.0.1:8000");
+$server = stream_socket_server("tcp://$ip:8000");
 
 $clients = [];
 

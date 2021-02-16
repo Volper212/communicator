@@ -1,14 +1,23 @@
-const form = document.querySelector('.message-form');
-const messages = document.querySelector('.messages');
-const input = form.querySelector('#message');
-const nick = form.querySelector('#nick');
+const [form, messages, message, nickForm, nickInput] = 
+    ['message-form', 'messages', 'message', 'nick-form', 'nick'].map(id => document.getElementById(id));
 
-const socket = new WebSocket('ws://localhost:8000');
+let nick;
+
+nickForm.addEventListener('submit', event => {
+    event.preventDefault();
+    nick = nickInput.value;
+    message.focus();
+    nickForm.remove();
+});
+
+const socket = new WebSocket('ws://zdeformowanychleb.onthewifi.com:8000');
+// const socket = new WebSocket('ws://192.168.1.101:8000');
 
 form.addEventListener('submit', event => {
     event.preventDefault();
-    socket.send(JSON.stringify({ [nick.value]: input.value }));
-    input.value = '';
+    if (!message.value) return;
+    socket.send(JSON.stringify({ [nick]: message.value }));
+    message.value = '';
 });
 
 socket.addEventListener('message', message => {
@@ -16,5 +25,9 @@ socket.addEventListener('message', message => {
     const p = document.createElement('p');
     const nick = Object.keys(data)[0];
     p.textContent = `<${nick}> ${data[nick]}`;
+    const isScrolled = messages.scrollTop === messages.scrollHeight - messages.clientHeight;
     messages.append(p);
+    if (isScrolled) {
+        messages.scrollTop = messages.scrollHeight - messages.clientHeight;
+    }
 });

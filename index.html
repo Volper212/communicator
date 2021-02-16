@@ -8,11 +8,16 @@
         <script defer src="index.js"></script>
     </head>
     <body>
+        <form id="nick-form">
+            <div>
+                <label for="nick">Wprowadź nick:</label>
+                <input type="text" id="nick" required autofocus>
+                <button type="submit">Zaloguj</button>
+            </div>
+        </form>
         <main>
-            <section class="messages">
-            </section>
-            <form class="message-form">
-                <input type="nick" id="nick">
+            <section id="messages"></section>
+            <form id="message-form">
                 <input type="text" id="message">
                 <button type="submit">Wyślij</button>
             </form>
