@@ -1,13 +1,12 @@
 <?php
-$ip = "0.0.0.0";
-// $context = stream_context_create([
-//     "ssl" => [
-//         "ciphers" => "DHE-RSA-AES256-SHA:LONG-CIPHER",
-//         "allow_self_signed" => true,
-//         "verify_peer" => false,
-//         "verify_peer_name" => false
-//     ]
-// ]);
+$context = stream_context_create([
+    "ssl" => [
+        "ciphers" => "DHE-RSA-AES256-SHA:LONG-CIPHER",
+        "allow_self_signed" => true,
+        "verify_peer" => false,
+        "verify_peer_name" => false
+    ]
+]);
 
 function between(int $number, int $min, int $max) {
     return $number >= $min && $number <= $max;
@@ -44,7 +43,7 @@ function unmask(string $text) {
 	return $text;
 }
 
-$server = stream_socket_server("tcp://$ip:8000");
+$server = stream_socket_server("tcp://0.0.0.0:8000", $errno, $errstr, STREAM_SERVER_BIND | STREAM_SERVER_LISTEN, $context);
 
 $clients = [];
 
@@ -74,7 +73,7 @@ while (true) {
         $clients[] = $client;
     }
     foreach ($clients as $index => $client) {
-        if ($result = stream_get_contents($client)) {
+        if ($result = fread($client, 5000)) {
             $text = unmask($result);
             if ($text === "" || (strlen($text) === 2 && between(hexdec(bin2hex($text)), 1000, 1015))) {
                 unset($clients[$index]);
