@@ -21,7 +21,7 @@
     });
 
     socket.addEventListener('error', () => {
-        alert('Kamkar wyłączył serwa albo coś się spieprzyło.\nBeka z ciebie.');
+        alert('The server is not running or the IP address is incorrect');
     });
 
     socket.addEventListener('message', message => {
